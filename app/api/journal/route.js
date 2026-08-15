@@ -1,8 +1,8 @@
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
-// GET — fetch all entries for a user and month
 export async function GET(request) {
   try {
+    const supabaseAdmin = getSupabaseAdmin()
     const { searchParams } = new URL(request.url)
     const email = searchParams.get('email')
     const month = searchParams.get('month')
@@ -28,12 +28,11 @@ export async function GET(request) {
   }
 }
 
-// POST — save a single journal field
 export async function POST(request) {
   try {
+    const supabaseAdmin = getSupabaseAdmin()
     const { email, month, day_number, entry_type, field_key, content } = await request.json()
 
-    // Get or create user
     let { data: user } = await supabaseAdmin
       .from('users')
       .select('id')
@@ -49,7 +48,6 @@ export async function POST(request) {
       user = newUser
     }
 
-    // Upsert the journal entry
     const { error } = await supabaseAdmin
       .from('journal_entries')
       .upsert({

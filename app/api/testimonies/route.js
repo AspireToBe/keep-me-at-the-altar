@@ -1,8 +1,8 @@
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
-// GET — fetch approved testimonies
 export async function GET(request) {
   try {
+    const supabaseAdmin = getSupabaseAdmin()
     const { searchParams } = new URL(request.url)
     const month = searchParams.get('month')
 
@@ -24,9 +24,9 @@ export async function GET(request) {
   }
 }
 
-// POST — submit a testimony
 export async function POST(request) {
   try {
+    const supabaseAdmin = getSupabaseAdmin()
     const { email, month, content, name, anonymous } = await request.json()
 
     let user_id = null
