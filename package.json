@@ -1,5 +1,6 @@
 {
   "name": "keep-me-at-the-altar",
+<<<<<<< HEAD
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -26,5 +27,22 @@
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+=======
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.0"
+>>>>>>> 422194e635779bc9de3ff07d2d8694e47251d7c9
   }
 }
