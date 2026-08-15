@@ -701,7 +701,7 @@ select.f-inp option{background:var(--surface)}
         <div class="summary-box" id="wz-summary"></div>
         <button <button style="width:100%;background:transparent;border:1px solid rgba(196,153,58,0.35);border-radius:8px;padding:0.65rem;font-size:13px;color:var(--gold-light);cursor:pointer;margin-bottom:0.6rem" onclick="wzGo(3)">+ Add more fasting months</button>
         <button class="btn-pdf" id="btn-pdf" onclick="downloadJournal()"><span id="btn-pdf-text">Download my journal (PDF)</span></button>
-        <button class="btn-journal" onclick="alert('Web journal coming soon — your progress will be saved across sessions.')">Open my web journal</button>
+        <button class="btn-journal" onclick="const email = prompt('Enter your email to access your journal:'); if(email){ const btn=document.querySelector('.btn-journal'); btn.textContent='Sending...'; btn.disabled=true; fetch('/api/auth/magic-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})}).then(r=>r.json()).then(d=>{ if(d.success){btn.textContent='Check your email ✓'; alert('Magic link sent to '+email+' — check your inbox.');}else{btn.textContent='Open my web journal';btn.disabled=false;alert('Error: '+d.error);}}).catch(()=>{btn.textContent='Open my web journal';btn.disabled=false;});}">Open my web journal</button>
         <div style="text-align:center;margin-top:1.25rem">
           <button class="footer-link" onclick="goto('testimonies')" style="font-size:12px;color:var(--parchment-dim)">Read testimonies from others on this journey →</button>
         </div>
