@@ -1,12 +1,11 @@
 import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/supabase'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(request) {
   try {
-    const { email } = await request.json()
+    const resend = new Resend(process.env.RESEND_API_KEY)
     const supabaseAdmin = getSupabaseAdmin()
+    const { email } = await request.json()
 
     const { data, error } = await supabaseAdmin.auth.admin.generateLink({
       type: 'magiclink',
