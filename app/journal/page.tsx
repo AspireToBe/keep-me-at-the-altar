@@ -127,20 +127,47 @@ export default function JournalPage() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [entries, setEntries] = useState<JournalEntry[]>([])
   const [currentMonth, setCurrentMonth] = useState('January')
-  const [view, setView] = useState<'monthly'|'altar'|'reflection'|'fasting'|'summary'>('monthly')
+  const [view, setView] = useState<'monthly'|'altar'|'reflection'|'fasting'|'summary'|'yearreview'>('monthly')
   const [fastingDay, setFastingDay] = useState(0)
   const [altarWeek, setAltarWeek] = useState(1)
   const [saveStatus, setSaveStatus] = useState('')
   const [sending, setSending] = useState(false)
+  const [yearReviewData, setYearReviewData] = useState<Record<string, JournalEntry[]>>({})
+  const [yearReviewLoading, setYearReviewLoading] = useState(false)
   const [userDays, setUserDays] = useState<{title:string;date:string}[]>([])
   const [addingDay, setAddingDay] = useState(false)
   const [newDayTitle, setNewDayTitle] = useState('')
   const [newDayDate, setNewDayDate] = useState('')
+  const [newDayFastType, setNewDayFastType] = useState('')
 
   const gold = '#A67C2E'; const ink = '#1E1B16'; const muted = '#5A5347'
   const bg = '#F7F4EF'; const surface = '#EDE9E1'; const border = '#CEC8BC'
 
   useEffect(() => {
+    // Check for Supabase magic link token in URL
+    const hash = window.location.hash
+    if (hash.includes('access_token')) {
+      const params = new URLSearchParams(hash.substring(1))
+      const accessToken = params.get('access_token')
+      if (accessToken) {
+        // Decode the JWT to get the email
+        try {
+          const payload = JSON.parse(atob(accessToken.split('.')[1]))
+          const userEmail = payload.email
+          if (userEmail) {
+            localStorage.setItem('kmata_email', userEmail)
+            setEmail(userEmail)
+            setLoggedIn(true)
+            // Clean up the URL
+            window.history.replaceState({}, document.title, '/journal')
+            return
+          }
+        } catch (e) {
+          console.error('Token parse error:', e)
+        }
+      }
+    }
+    // Fall back to saved email in localStorage
     const saved = localStorage.getItem('kmata_email')
     if (saved) { setEmail(saved); setLoggedIn(true) }
   }, [])
@@ -181,12 +208,25 @@ export default function JournalPage() {
     .catch(() => setSaveStatus('Error saving'))
   }
 
+  async function loadYearReview() {
+    if (!email) return
+    setYearReviewLoading(true)
+    const results: Record<string, JournalEntry[]> = {}
+    for (const month of MONTHS) {
+      const res = await fetch(`/api/journal?email=${encodeURIComponent(email)}&month=${month}`)
+      const data = await res.json()
+      if (Array.isArray(data) && data.length > 0) results[month] = data
+    }
+    setYearReviewData(results)
+    setYearReviewLoading(false)
+  }
+
   function addUserDay() {
     if (!newDayTitle) return
-    const updated = [...userDays, { title: newDayTitle, date: newDayDate }]
+    const updated = [...userDays, { title: newDayTitle, date: newDayDate, fastType: newDayFastType || 'Personal fast' }]
     setUserDays(updated)
     localStorage.setItem(`kmata_userdays_${currentMonth}`, JSON.stringify(updated))
-    setNewDayTitle(''); setNewDayDate(''); setAddingDay(false)
+    setNewDayTitle(''); setNewDayDate(''); setNewDayFastType(''); setAddingDay(false)
     setFastingDay(SUGGESTED_DAYS[currentMonth].length + updated.length - 1)
   }
 
@@ -307,8 +347,12 @@ export default function JournalPage() {
             {id:'altar', label:'Altar Day'},
             {id:'reflection', label:'Reflection'},
             {id:'summary', label:'Summary'},
+            {id:'yearreview', label:'Year in Review'},
           ].map(tab => (
-            <button key={tab.id} style={navBtn(view===tab.id)} onClick={() => setView(tab.id as typeof view)}>
+            <button key={tab.id} style={navBtn(view===tab.id)} onClick={() => {
+              setView(tab.id as typeof view)
+              if (tab.id === 'yearreview') loadYearReview()
+            }}>
               {tab.label}
             </button>
           ))}
@@ -350,6 +394,18 @@ export default function JournalPage() {
                   style={{ ...inputStyle, marginBottom:'0.75rem', resize:'none' }} />
                 <input type="date" value={newDayDate} onChange={e => setNewDayDate(e.target.value)}
                   style={{ ...inputStyle, marginBottom:'0.75rem', resize:'none' }} />
+                <select value={newDayFastType} onChange={e => setNewDayFastType(e.target.value)}
+                  style={{ ...inputStyle, marginBottom:'0.75rem', resize:'none' }}>
+                  <option value="">Select fast type...</option>
+                  <option value="Total Fast (24hrs)">Total Fast (24hrs) — No food or water</option>
+                  <option value="Normal Fast">Normal Fast — No food, water only</option>
+                  <option value="Daniel Fast">Daniel Fast — No meat, dairy or sweets</option>
+                  <option value="Partial Fast">Partial Fast — Skip one or two meals</option>
+                  <option value="Intermittent Fast">Intermittent Fast — Fast until a set time</option>
+                  <option value="Media Fast">Media Fast — No social media or entertainment</option>
+                  <option value="Generosity Fast">Generosity Fast — Give something away each day</option>
+                  <option value="Corporate Fast">Corporate Fast — Fasting with others</option>
+                </select>
                 <div style={{ display:'flex', gap:'8px' }}>
                   <button onClick={addUserDay} style={{ background:gold, color:'white', border:'none', padding:'8px 16px', borderRadius:'6px', cursor:'pointer', fontSize:'13px', fontFamily:'sans-serif' }}>Add</button>
                   <button onClick={() => setAddingDay(false)} style={{ background:'transparent', border:`1px solid ${border}`, color:muted, padding:'8px 16px', borderRadius:'6px', cursor:'pointer', fontSize:'13px', fontFamily:'sans-serif' }}>Cancel</button>
@@ -483,6 +539,82 @@ export default function JournalPage() {
                 ))}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* YEAR IN REVIEW */}
+        {view==='yearreview' && (
+          <div>
+            <h2 style={{ color:ink, fontSize:'1.6rem', marginBottom:'0.25rem' }}>Year in Review</h2>
+            <p style={{ color:muted, fontSize:'13px', marginBottom:'2rem', fontFamily:'sans-serif' }}>
+              Everything you wrote across all 12 months — your complete record of the year.
+            </p>
+
+            {yearReviewLoading && (
+              <div style={{ textAlign:'center', padding:'3rem', color:muted, fontFamily:'sans-serif' }}>
+                <p>Loading your year...</p>
+              </div>
+            )}
+
+            {!yearReviewLoading && Object.keys(yearReviewData).length === 0 && (
+              <div style={{ textAlign:'center', padding:'3rem', color:muted, fontFamily:'sans-serif' }}>
+                <p>No entries found yet.</p>
+                <p style={{ fontSize:'13px' }}>Start journalling in any month and it will appear here.</p>
+              </div>
+            )}
+
+            {!yearReviewLoading && MONTHS.map(month => {
+              const monthEntries = yearReviewData[month]
+              if (!monthEntries || monthEntries.length === 0) return null
+
+              const getMonthEntry = (key: string) => monthEntries.find(e => e.field_key === key)?.content || ''
+
+              const prayerFocus = getMonthEntry('prayer_focus')
+              const godSaid = getMonthEntry('god_said')
+              const whatChanged = getMonthEntry('what_changed')
+              const carryForward = getMonthEntry('carry_forward')
+              const temp = getMonthEntry('temperature')
+
+              return (
+                <div key={month} style={{ marginBottom:'2rem', borderRadius:'12px', border:`1px solid ${border}`, overflow:'hidden' }}>
+                  {/* Month header */}
+                  <div style={{ background: ink, padding:'1rem 1.25rem', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                    <h3 style={{ color: gold, margin:0, fontSize:'1.1rem', fontFamily:'sans-serif' }}>{month}</h3>
+                    <div style={{ display:'flex', gap:'8px', alignItems:'center' }}>
+                      {temp && <span style={{ background:`${gold}33`, color: gold, padding:'3px 10px', borderRadius:'20px', fontSize:'11px', fontFamily:'sans-serif' }}>{temp}</span>}
+                      <span style={{ color:muted, fontSize:'11px', fontFamily:'sans-serif' }}>{monthEntries.length} entries</span>
+                    </div>
+                  </div>
+
+                  <div style={{ padding:'1.25rem' }}>
+                    {prayerFocus && (
+                      <div style={{ marginBottom:'1rem' }}>
+                        <p style={{ color:gold, fontSize:'10px', textTransform:'uppercase', letterSpacing:'0.08em', fontFamily:'sans-serif', marginBottom:'4px' }}>Prayer Focus</p>
+                        <p style={{ color:ink, fontSize:'14px', lineHeight:'1.6', margin:0, whiteSpace:'pre-wrap' }}>{prayerFocus}</p>
+                      </div>
+                    )}
+                    {whatChanged && (
+                      <div style={{ marginBottom:'1rem' }}>
+                        <p style={{ color:gold, fontSize:'10px', textTransform:'uppercase', letterSpacing:'0.08em', fontFamily:'sans-serif', marginBottom:'4px' }}>What Changed</p>
+                        <p style={{ color:ink, fontSize:'14px', lineHeight:'1.6', margin:0, whiteSpace:'pre-wrap' }}>{whatChanged}</p>
+                      </div>
+                    )}
+                    {godSaid && (
+                      <div style={{ marginBottom:'1rem', padding:'0.85rem 1rem', background:'#EAE6DE', borderRadius:'8px', borderLeft:`3px solid ${gold}` }}>
+                        <p style={{ color:gold, fontSize:'10px', textTransform:'uppercase', letterSpacing:'0.08em', fontFamily:'sans-serif', marginBottom:'4px' }}>The Clearest Thing God Said</p>
+                        <p style={{ color:ink, fontSize:'14px', lineHeight:'1.6', margin:0, fontStyle:'italic', whiteSpace:'pre-wrap' }}>{godSaid}</p>
+                      </div>
+                    )}
+                    {carryForward && (
+                      <div>
+                        <p style={{ color:gold, fontSize:'10px', textTransform:'uppercase', letterSpacing:'0.08em', fontFamily:'sans-serif', marginBottom:'4px' }}>Carried Forward</p>
+                        <p style={{ color:muted, fontSize:'13px', lineHeight:'1.6', margin:0, whiteSpace:'pre-wrap' }}>{carryForward}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
           </div>
         )}
 
