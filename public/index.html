@@ -373,6 +373,30 @@ select.f-inp option{background:var(--surface)}
 
   <div class="divider"></div>
 
+  <!-- Community Counter -->
+  <div style="padding:3rem 1.5rem;text-align:center;background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <p class="section-eyebrow">Right now</p>
+    <div style="display:flex;justify-content:center;align-items:center;gap:2.5rem;flex-wrap:wrap;margin-top:1rem">
+      <div>
+        <div id="counter-month" style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:400;color:var(--gold-light);line-height:1">—</div>
+        <div style="font-size:11px;color:var(--parchment-dim);letter-spacing:0.08em;text-transform:uppercase;font-family:sans-serif;margin-top:4px">Fasting this month</div>
+      </div>
+      <div style="width:1px;height:48px;background:var(--border)"></div>
+      <div>
+        <div id="counter-total" style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:400;color:var(--gold-light);line-height:1">—</div>
+        <div style="font-size:11px;color:var(--parchment-dim);letter-spacing:0.08em;text-transform:uppercase;font-family:sans-serif;margin-top:4px">Journals created</div>
+      </div>
+      <div style="width:1px;height:48px;background:var(--border)"></div>
+      <div>
+        <div id="counter-countries" style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:400;color:var(--gold-light);line-height:1">—</div>
+        <div style="font-size:11px;color:var(--parchment-dim);letter-spacing:0.08em;text-transform:uppercase;font-family:sans-serif;margin-top:4px">Countries</div>
+      </div>
+    </div>
+    <p style="color:var(--parchment-dim);font-size:13px;margin-top:1.25rem;font-style:italic">You are not fasting alone.</p>
+  </div>
+
+  <div class="divider"></div>
+
   <!-- Testimonies strip -->
   <div class="inner-wide">
     <p class="section-eyebrow" style="text-align:center">Testimonies</p>
@@ -680,7 +704,7 @@ select.f-inp option{background:var(--surface)}
         <p id="mo-hint" style="font-size:11px;color:var(--gold-light);min-height:16px;margin-bottom:1.25rem"></p>
 
         <p class="wz-label" style="margin-bottom:0.5rem">Additional months <span style="font-weight:400;opacity:0.6">— optional</span></p>
-        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem" id="mo-extra-grid">
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem" id="mo-extra-grid">
           <div class="mo-pill extra" onclick="wzToggleExtra(this,'January')">January</div>
           <div class="mo-pill extra" onclick="wzToggleExtra(this,'February')">February</div>
           <div class="mo-pill extra" onclick="wzToggleExtra(this,'March')">March</div>
@@ -694,6 +718,13 @@ select.f-inp option{background:var(--surface)}
           <div class="mo-pill extra" onclick="wzToggleExtra(this,'November')">November</div>
           <div class="mo-pill extra" onclick="wzToggleExtra(this,'December')">December</div>
         </div>
+
+        <!-- Fast type selectors — shown per selected extra month -->
+        <div id="extra-fast-types" style="display:none;background:rgba(196,153,58,0.06);border:1px solid rgba(196,153,58,0.2);border-radius:10px;padding:1rem;margin-bottom:0.75rem">
+          <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-light);font-family:sans-serif;margin-bottom:0.75rem">Choose fast type for each additional month</p>
+          <div id="extra-fast-list" style="display:flex;flex-direction:column;gap:0.6rem"></div>
+        </div>
+
         <p style="font-size:12px;color:var(--parch-dim);line-height:1.6;margin-bottom:1.25rem">You can add more months any time from your journal during the year.</p>
 
         <div class="wz-btns">
@@ -1290,11 +1321,42 @@ function wzToggleExtra(el, val) {
   if (el.classList.contains('sel')) {
     el.classList.remove('sel');
     wz.activeMonths = (wz.activeMonths || []).filter(m => m !== val);
+    delete (wz.activeMonthFasts || {})[val];
   } else {
     el.classList.add('sel');
     wz.activeMonths = wz.activeMonths || [];
     wz.activeMonths.push(val);
   }
+  wzUpdateFastTypes();
+}
+
+function wzUpdateFastTypes() {
+  const container = document.getElementById('extra-fast-types');
+  const list = document.getElementById('extra-fast-list');
+  const months = wz.activeMonths || [];
+  if (months.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+  wz.activeMonthFasts = wz.activeMonthFasts || {};
+  list.innerHTML = months.map(m => `
+    <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+      <span style="font-size:13px;color:var(--parchment);font-family:sans-serif;min-width:90px">${m}</span>
+      <select onchange="wz.activeMonthFasts['${m}']=this.value"
+        style="flex:1;padding:6px 10px;border-radius:6px;border:1px solid rgba(196,153,58,0.3);background:var(--surface);color:var(--parchment);font-size:12px;font-family:sans-serif">
+        <option value="">Select fast type...</option>
+        <option value="Daniel Fast">Daniel Fast — No meat, dairy or sweets</option>
+        <option value="Normal Fast">Normal Fast — No food, water only</option>
+        <option value="Partial Fast">Partial Fast — Skip one or two meals</option>
+        <option value="Intermittent Fast">Intermittent Fast — Fast until a set time</option>
+        <option value="Total Fast">Total Fast — No food or water (24hrs)</option>
+        <option value="Media Fast">Media Fast — No social media or entertainment</option>
+        <option value="Generosity Fast">Generosity Fast — Give something away daily</option>
+        <option value="Corporate Fast">Corporate Fast — Fasting with others</option>
+      </select>
+    </div>
+  `).join('');
 }
 
 function wzSyncExtra() {
@@ -1421,6 +1483,25 @@ function downloadJournal() {
     setTimeout(() => msg.remove(), 5000);
   });
 }
+
+
+// ── COMMUNITY COUNTER ─────────────────────────────────
+async function loadCommunityCounter() {
+  try {
+    const res = await fetch('/api/community-stats')
+    if (!res.ok) return
+    const data = await res.json()
+    const monthEl = document.getElementById('counter-month')
+    const totalEl = document.getElementById('counter-total')
+    const countriesEl = document.getElementById('counter-countries')
+    if (monthEl && data.fasting_this_month !== undefined) monthEl.textContent = data.fasting_this_month
+    if (totalEl && data.total_users !== undefined) totalEl.textContent = data.total_users
+    if (countriesEl && data.countries !== undefined) countriesEl.textContent = data.countries
+  } catch (e) {
+    console.log('Counter unavailable')
+  }
+}
+loadCommunityCounter()
 
 </script>
 </body>
