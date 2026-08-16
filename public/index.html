@@ -740,7 +740,27 @@ select.f-inp option{background:var(--surface)}
         <div class="summary-box" id="wz-summary"></div>
         <button <button style="width:100%;background:transparent;border:1px solid rgba(196,153,58,0.35);border-radius:8px;padding:0.65rem;font-size:13px;color:var(--gold-light);cursor:pointer;margin-bottom:0.6rem" onclick="wzGo(3)">+ Add more fasting months</button>
         <button class="btn-pdf" id="btn-pdf" onclick="downloadJournal()"><span id="btn-pdf-text">Download my journal (PDF)</span></button>
-        <button class="btn-journal" onclick="alert('Web journal coming soon — your progress will be saved across sessions.')">Open my web journal</button>
+        <button class="btn-journal" onclick="openJournal()">Open my web journal</button>
+
+        <!-- Calendar integration -->
+        <div style="margin-top:1.25rem;padding:1rem;background:rgba(196,153,58,0.06);border:1px solid rgba(196,153,58,0.2);border-radius:10px">
+          <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-light);font-family:sans-serif;text-align:center;margin-bottom:0.75rem">Add fasting days to your calendar</p>
+          <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap">
+            <button onclick="addToGoogleCalendar()" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid rgba(196,153,58,0.3);background:transparent;color:var(--parchment);font-size:12px;font-family:sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Google Calendar
+            </button>
+            <button onclick="downloadICS()" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid rgba(196,153,58,0.3);background:transparent;color:var(--parchment);font-size:12px;font-family:sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Apple / iCal
+            </button>
+            <button onclick="setupEmailReminders()" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid rgba(196,153,58,0.3);background:transparent;color:var(--parchment);font-size:12px;font-family:sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email reminders
+            </button>
+          </div>
+          <p id="calendar-status" style="font-size:11px;color:var(--gold-light);text-align:center;margin-top:0.5rem;min-height:14px"></p>
+        </div>
         <div style="text-align:center;margin-top:1.25rem">
           <button class="footer-link" onclick="goto('testimonies')" style="font-size:12px;color:var(--parchment-dim)">Read testimonies from others on this journey →</button>
         </div>
@@ -1502,6 +1522,153 @@ async function loadCommunityCounter() {
   }
 }
 loadCommunityCounter()
+
+
+// ── OPEN JOURNAL ──────────────────────────────────────
+function openJournal() {
+  const email = document.getElementById('wz-name') ? '' : ''
+  const btn = document.querySelector('.btn-journal')
+  btn.textContent = 'Sending your link...'
+  btn.disabled = true
+  const savedEmail = localStorage.getItem('kmata_email')
+  const name = document.getElementById('wz-name')?.value.trim() || wz.name || ''
+  if (savedEmail) {
+    window.location.href = '/journal'
+    return
+  }
+  const userEmail = prompt('Enter your email to access your journal:')
+  if (!userEmail) { btn.textContent = 'Open my web journal'; btn.disabled = false; return }
+  localStorage.setItem('kmata_email', userEmail)
+  fetch('/api/auth/magic-link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: userEmail })
+  })
+  .then(r => r.json())
+  .then(d => {
+    btn.textContent = 'Check your email ✓'
+    btn.disabled = false
+    alert('Magic link sent to ' + userEmail + ' — check your inbox and click the link to open your journal.')
+  })
+  .catch(() => { btn.textContent = 'Open my web journal'; btn.disabled = false })
+}
+
+// ── CALENDAR HELPERS ──────────────────────────────────
+const FASTING_DAY_DATES_2025 = {
+  January: [{title:'Opening the Gate',date:'20250101'},{title:'Consecration',date:'20250102'},{title:'Hearing His Voice',date:'20250103'},{title:'Breaking Old Patterns',date:'20250104'},{title:'Sealing the Fast',date:'20250107'}],
+  February: [{title:'Loving God First',date:'20250205'},{title:'Loving Yourself Well',date:'20250212'},{title:'Valentine's Day Fast',date:'20250214'},{title:'Forgiving Deeply',date:'20250219'},{title:'Receiving God's Love',date:'20250226'}],
+  March: [{title:'Ash Wednesday',date:'20250305'},{title:'Entering the Desert',date:'20250312'},{title:'Facing Temptation',date:'20250319'},{title:'Silence & Solitude',date:'20250326'},{title:'The Cross',date:'20250329'}],
+  April: [{title:'Palm Sunday',date:'20250413'},{title:'Good Friday — Fast of the Cross',date:'20250418'},{title:'Holy Saturday',date:'20250419'},{title:'Resurrection Sunday',date:'20250420'},{title:'Walking It Out',date:'20250427'}],
+  May: [{title:'Waiting for the Promise',date:'20250507'},{title:'Hunger for the Holy Spirit',date:'20250514'},{title:'Pentecost Sunday',date:'20250601'},{title:'Tongues of Fire',date:'20250521'},{title:'Signs & Wonders',date:'20250528'}],
+  June: [{title:'The Harvest is Plentiful',date:'20250604'},{title:'Compassion for the Lost',date:'20250611'},{title:'Your Mission Field',date:'20250618'},{title:'Sowing in Tears',date:'20250625'},{title:'Generosity as Witness',date:'20250630'}],
+  July: [{title:'Halftime Review',date:'20250701'},{title:'Gratitude for the First Half',date:'20250702'},{title:'Releasing What Didn't Work',date:'20250703'},{title:'Recommitting to Purpose',date:'20250704'},{title:'Sealing the Midpoint',date:'20250707'}],
+  August: [{title:'The Gift of Silence',date:'20250806'},{title:'Sabbath Rest',date:'20250813'},{title:'Detoxing the Mind',date:'20250820'},{title:'Hearing in the Stillness',date:'20250827'},{title:'Renewal of Strength',date:'20250831'}],
+  September: [{title:'The Fear of the Lord',date:'20250903'},{title:'The Mind of Christ',date:'20250910'},{title:'Learning from the Holy Spirit',date:'20250917'},{title:'Wisdom for Relationships',date:'20250924'},{title:'Applying What You Know',date:'20250930'}],
+  October: [{title:'Know Your Enemy',date:'20251001'},{title:'Put on the Full Armour',date:'20251008'},{title:'The Power of the Name',date:'20251015'},{title:'Interceding for Your City',date:'20251022'},{title:'Standing Firm',date:'20251029'}],
+  November: [{title:'Counting Your Blessings',date:'20251101'},{title:'The Fast of Contentment',date:'20251105'},{title:'Generosity as Worship',date:'20251112'},{title:'Thanksgiving Fast',date:'20251127'},{title:'Finishing Well',date:'20251130'}],
+  December: [{title:'Advent Sunday 1 — Hope',date:'20251130'},{title:'Advent Sunday 2 — Peace',date:'20251207'},{title:'Advent Sunday 3 — Joy',date:'20251214'},{title:'Advent Sunday 4 — Love',date:'20251221'},{title:'December 31 — Closing the Year',date:'20251231'}],
+}
+
+function getFastingEvents() {
+  const allMonths = [...(wz.months || []), ...(wz.activeMonths || [])]
+  const events = []
+  allMonths.forEach(month => {
+    const days = FASTING_DAY_DATES_2025[month] || []
+    days.forEach(day => {
+      events.push({ title: 'Keep Me At The Altar — ' + day.title, date: day.date, month })
+    })
+    // Add altar days (every selected altar_day of the week)
+    if (wz.day) {
+      const dayNames = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}
+      events.push({ title: 'Keep Me At The Altar — Altar Day (' + (dayFull[wz.day]||wz.day) + ')', date: day, month, recurring: true, dayOfWeek: dayNames[wz.day] })
+    }
+  })
+  return events
+}
+
+function addToGoogleCalendar() {
+  const events = getFastingEvents()
+  if (events.length === 0) { alert('No fasting months selected yet.'); return }
+  const status = document.getElementById('calendar-status')
+  // Open each event in Google Calendar (open first one, rest queued)
+  let opened = 0
+  events.slice(0, 10).forEach((ev, i) => {
+    setTimeout(() => {
+      const start = ev.date
+      const end = ev.date
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.title)}&dates=${start}/${end}&details=${encodeURIComponent('A guided fasting day from Keep Me At The Altar. Open your journal at keepmeatthealtar.org/journal')}`
+      if (i === 0) window.open(url, '_blank')
+    }, i * 300)
+  })
+  status.textContent = `Opening Google Calendar with your first fasting day. You have ${events.length} days total.`
+  setTimeout(() => status.textContent = '', 5000)
+}
+
+function downloadICS() {
+  const events = getFastingEvents()
+  if (events.length === 0) { alert('No fasting months selected yet.'); return }
+  const status = document.getElementById('calendar-status')
+
+  let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Keep Me At The Altar//EN\nCALNAME:Keep Me At The Altar Fasting\n'
+
+  events.forEach(ev => {
+    const d = ev.date
+    ics += 'BEGIN:VEVENT\n'
+    ics += 'DTSTART;VALUE=DATE:' + d + '\n'
+    ics += 'DTEND;VALUE=DATE:' + d + '\n'
+    ics += 'SUMMARY:' + ev.title + '\n'
+    ics += 'DESCRIPTION:A guided fasting day from Keep Me At The Altar.\\nOpen your journal at keepmeatthealtar.org/journal\n'
+    ics += 'URL:https://keepmeatthealtar.org/journal\n'
+    ics += 'BEGIN:VALARM\nTRIGGER:-PT30M\nACTION:DISPLAY\nDESCRIPTION:Fasting day reminder\nEND:VALARM\n'
+    ics += 'END:VEVENT\n'
+  })
+
+  ics += 'END:VCALENDAR'
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'KeepMeAtTheAltar_FastingDays.ics'
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+  status.textContent = `Downloaded ${events.length} fasting days. Open the .ics file to import into Apple Calendar.`
+  setTimeout(() => status.textContent = '', 5000)
+}
+
+function setupEmailReminders() {
+  const userEmail = localStorage.getItem('kmata_email') || prompt('Enter your email for fasting day reminders:')
+  if (!userEmail) return
+  localStorage.setItem('kmata_email', userEmail)
+  const status = document.getElementById('calendar-status')
+  status.textContent = 'Setting up reminders...'
+  fetch('/api/reminders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: userEmail,
+      name: wz.name || '',
+      anchor_months: wz.months || [],
+      active_months: wz.activeMonths || [],
+      altar_day: (typeof dayFull !== 'undefined' && dayFull[wz.day]) || wz.day || 'Saturday'
+    })
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.success) {
+      status.textContent = '✓ Email reminders set up for ' + userEmail
+    } else {
+      status.textContent = 'Something went wrong. Try again.'
+    }
+    setTimeout(() => status.textContent = '', 5000)
+  })
+  .catch(() => {
+    status.textContent = 'Could not set up reminders right now.'
+    setTimeout(() => status.textContent = '', 3000)
+  })
+}
 
 </script>
 </body>
