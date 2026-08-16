@@ -279,7 +279,8 @@ export default function JournalPage() {
         <div style={{ textAlign:'center', padding:'2rem', maxWidth:'400px' }}>
           <div style={{ fontSize:'2rem', marginBottom:'0.5rem' }}>🕯</div>
           <h1 style={{ color: gold, fontSize:'1.4rem', marginBottom:'0.5rem' }}>Keep Me At The Altar™</h1>
-          <p style={{ color: muted, marginBottom:'1.5rem', fontSize:'14px', lineHeight:'1.6' }}>Enter your email to access your personal journal.</p>
+          <p style={{ color: ink, fontSize:'1rem', fontWeight:500, marginBottom:'0.4rem' }}>Your journal is private</p>
+          <p style={{ color: muted, marginBottom:'1.5rem', fontSize:'14px', lineHeight:'1.6' }}>Enter your email and we'll send you a secure link to access your personalised journal. No password required — the link expires in 24 hours.</p>
           <input type="email" placeholder="Your email address" value={email}
             onChange={e => setEmail(e.target.value)}
             onKeyDown={e => e.key==='Enter' && email && sendLink()}
