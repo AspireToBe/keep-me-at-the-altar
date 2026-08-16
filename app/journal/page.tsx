@@ -13,10 +13,10 @@ const MONTHS = ['January','February','March','April','May','June',
                 'July','August','September','October','November','December']
 
 const PRAYER_SLOTS = [
-  { key: 'prayer_9am',  label: '9am — 3rd Hour',   prompt: 'Morning prayer — surrender and consecration' },
-  { key: 'prayer_12pm', label: '12pm — 6th Hour',  prompt: 'Midday prayer — listening and stillness' },
-  { key: 'prayer_3pm',  label: '3pm — 9th Hour',   prompt: 'Afternoon prayer — intercession' },
-  { key: 'prayer_6pm',  label: '6pm — 12th Hour',  prompt: 'Evening prayer — alignment and declaration' },
+  { key: 'prayer_9am',  label: '9am — Morning',     prompt: 'Surrender and consecration' },
+  { key: 'prayer_12pm', label: '12pm — Midday',     prompt: 'Listening and stillness' },
+  { key: 'prayer_3pm',  label: '3pm — Afternoon',   prompt: 'Intercession' },
+  { key: 'prayer_6pm',  label: '6pm — Evening',     prompt: 'Alignment and declaration' },
 ]
 
 const MONTHLY_FIELDS = [
