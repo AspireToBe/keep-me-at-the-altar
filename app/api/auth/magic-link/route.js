@@ -11,7 +11,7 @@ export async function POST(request) {
       type: 'magiclink',
       email,
       options: {
-        redirectTo: 'https://keepmeatthealtar.org/journal'
+        redirectTo: 'https://www.keepmeatthealtar.org/journal'
       }
     })
 
