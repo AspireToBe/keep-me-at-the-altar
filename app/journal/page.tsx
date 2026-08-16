@@ -441,21 +441,14 @@ export default function JournalPage() {
             <p style={{ color:muted, fontSize:'13px', marginBottom:'2rem', fontFamily:'sans-serif' }}>
               Week {altarWeek} — Your weekly reset. One day set apart to fast, listen, and align.
             </p>
-            {[
-              { key:`altar_w${altarWeek}_morning`, label:'Morning — Surrender', prompt:'Today I return to God by laying down:' },
-              { key:`altar_w${altarWeek}_midday`,  label:'Midday — Listening',  prompt:'In the silence, I heard God say:' },
-              { key:`altar_w${altarWeek}_evening`, label:'Evening — Alignment', prompt:'Declaration I am speaking over this week:' },
-              { key:`altar_w${altarWeek}_word`,    label:'One Word God Gave Me Today', prompt:'' },
-            ].map(f => (
-              <div key={f.key} style={{ marginBottom:'1.5rem' }}>
-                <label style={labelStyle}>{f.label}</label>
-                {f.prompt && <p style={{ color:muted, fontSize:'13px', marginBottom:'6px', fontStyle:'italic' }}>{f.prompt}</p>}
-                <textarea rows={f.key.includes('word') ? 2 : 4}
-                  defaultValue={getEntry(f.key)}
-                  onBlur={e => saveEntry(f.key, e.target.value, altarWeek, 'altar')}
-                  style={inputStyle} placeholder="Write here..." />
-              </div>
-            ))}
+            {prayerSection(`altar_w${altarWeek}`, altarWeek, 'altar')}
+            <div style={{ marginBottom:'1.5rem', marginTop:'1.5rem' }}>
+              <label style={labelStyle}>One Word God Gave Me Today</label>
+              <textarea rows={2}
+                defaultValue={getEntry(`altar_w${altarWeek}_word`)}
+                onBlur={e => saveEntry(`altar_w${altarWeek}_word`, e.target.value, altarWeek, 'altar')}
+                style={inputStyle} placeholder="Write here..." />
+            </div>
             <div style={{ marginBottom:'1.5rem' }}>
               <label style={labelStyle}>How I feel leaving the altar today</label>
               <div style={{ display:'flex', gap:'8px', flexWrap:'wrap' }}>
@@ -465,7 +458,6 @@ export default function JournalPage() {
                 ))}
               </div>
             </div>
-            {prayerSection(`altar_w${altarWeek}`, altarWeek, 'altar')}
           </div>
         )}
 
