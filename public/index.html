@@ -188,6 +188,7 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .mo-btn.anchor-default{border-color:#7A6030;color:var(--gold)}
 .mo-tag{font-size:8px;display:block;color:var(--gold);margin-top:1px;letter-spacing:.05em}
 .mo-hint{font-size:12px;color:var(--parchment-dim);margin-top:.65rem;min-height:18px}
+.wz-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-light);font-family:var(--font-sans);margin-bottom:0.5rem;display:block}
 .wz-btns{display:flex;gap:.7rem;margin-top:1.75rem}
 .wz-next{flex:1;background:var(--gold);border:none;border-radius:8px;padding:.8rem 1rem;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:#1A1714;cursor:pointer;transition:background .2s}
 .wz-next:hover{background:var(--gold-light)}
@@ -287,7 +288,7 @@ select.f-inp option{background:var(--surface)}
 .mpill:hover{border-color:var(--gold);color:var(--parchment)}
 .mpill.selected{border-color:var(--gold);background:#2A2318;color:var(--gold)}
 .mpill.anchor.selected{background:rgba(196,153,58,0.15)}
-.mo-pill{padding:0.3rem 0.65rem;border-radius:20px;border:1px solid rgba(196,153,58,0.25);font-size:12px;font-weight:500;color:var(--parch-dim);cursor:pointer;transition:all 0.15s;user-select:none;background:transparent}
+.mo-pill{padding:0.35rem 0.85rem;border-radius:20px;border:1px solid rgba(196,153,58,0.25);font-size:12px;font-weight:500;color:var(--parch-dim);cursor:pointer;transition:all 0.15s;user-select:none;background:transparent}
 .mo-pill:hover{border-color:var(--gold-light);color:var(--parchment)}
 .mo-pill.sel{border-color:var(--gold-light);background:rgba(196,153,58,0.18);color:var(--gold-light)}
 .mo-pill.extra{border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.4)}
@@ -305,8 +306,9 @@ select.f-inp option{background:var(--surface)}
   <div class="nav-logo" onclick="goto('landing')">The Altar <span>Year™</span></div>
   <div class="nav-links">
     <button class="nav-link" id="nl-understand" onclick="goto('understand')">Understanding Fasting</button>
-    <button class="nav-link" id="nl-testimonies" onclick="goto('testimonies')">Testimonies</button>
+    <button class="nav-link" id="nl-fastguide" onclick="goto('fastguide')">Fasting Guide</button>
     <a class="nav-link" href="/journal" style="text-decoration:none">My Journal</a>
+    <button class="nav-link" id="nl-testimonies" onclick="goto('testimonies')">Testimonies</button>
     <button class="nav-cta" onclick="goto('wizard')">Begin my fast →</button>
   </div>
 </nav>
@@ -402,6 +404,7 @@ select.f-inp option{background:var(--surface)}
     <div class="footer-links">
       <button class="footer-link" onclick="goto('privacy')">Privacy Policy</button>
       <a href="/journal" class="footer-link" style="text-decoration:none">My Journal</a>
+      <button class="footer-link" onclick="goto('fastguide')">Fasting Guide</button>
       <button class="footer-link" onclick="goto('testimonies')">Testimonies</button>
       <button class="footer-link" onclick="goto('understand')">Understanding Fasting</button>
     </div>
@@ -595,6 +598,7 @@ select.f-inp option{background:var(--surface)}
       <button class="footer-link" onclick="goto('testimonies')">Testimonies</button>
       <button class="footer-link" onclick="goto('privacy')">Privacy Policy</button>
       <a href="/journal" class="footer-link" style="text-decoration:none">My Journal</a>
+      <button class="footer-link" onclick="goto('fastguide')">Fasting Guide</button>
     </div>
   </footer>
 </div>
@@ -654,43 +658,44 @@ select.f-inp option{background:var(--surface)}
       </div>
       <!-- Step 4 -->
       <div class="wz-step" id="ws3">
-        <p class="wz-eye">Step 4 of 4 — Months</p>
-        <h2 class="wz-title">Your months</h2>
-        <p class="wz-sub">Jan, Jul and Dec are your anchor months — your non-negotiables. Tap any to swap. Then add extra months you plan to fast below.</p>
+        <p class="wz-eye">Step 4 of 4</p>
+        <h2 class="wz-title">Your fasting months</h2>
+        <p class="wz-sub">January, July and December are set as your anchor months. Tap to swap any of them. You can also add extra months below.</p>
 
-        <p style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-light);margin-bottom:0.5rem">Anchor months <span style="color:var(--parch-dim);text-transform:none;letter-spacing:0;font-size:10px">— choose exactly 3</span></p>
-        <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.25rem" id="mo-anchor-grid">
-          <div class="mo-pill sel" onclick="wzToggleAnchor(this,'January')">Jan</div>
-          <div class="mo-pill" onclick="wzToggleAnchor(this,'February')">Feb</div>
-          <div class="mo-pill" onclick="wzToggleAnchor(this,'March')">Mar</div>
-          <div class="mo-pill" onclick="wzToggleAnchor(this,'April')">Apr</div>
+        <p class="wz-label" style="margin-top:1.25rem;margin-bottom:0.5rem">Anchor months <span style="font-weight:400;opacity:0.6">— choose exactly 3</span></p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.25rem" id="mo-anchor-grid">
+          <div class="mo-pill sel" onclick="wzToggleAnchor(this,'January')">January</div>
+          <div class="mo-pill" onclick="wzToggleAnchor(this,'February')">February</div>
+          <div class="mo-pill" onclick="wzToggleAnchor(this,'March')">March</div>
+          <div class="mo-pill" onclick="wzToggleAnchor(this,'April')">April</div>
           <div class="mo-pill" onclick="wzToggleAnchor(this,'May')">May</div>
-          <div class="mo-pill" onclick="wzToggleAnchor(this,'June')">Jun</div>
-          <div class="mo-pill sel" onclick="wzToggleAnchor(this,'July')">Jul</div>
-          <div class="mo-pill" onclick="wzToggleAnchor(this,'August')">Aug</div>
-          <div class="mo-pill" onclick="wzToggleAnchor(this,'September')">Sep</div>
-          <div class="mo-pill" onclick="wzToggleAnchor(this,'October')">Oct</div>
-          <div class="mo-pill" onclick="wzToggleAnchor(this,'November')">Nov</div>
-          <div class="mo-pill sel" onclick="wzToggleAnchor(this,'December')">Dec</div>
+          <div class="mo-pill" onclick="wzToggleAnchor(this,'June')">June</div>
+          <div class="mo-pill sel" onclick="wzToggleAnchor(this,'July')">July</div>
+          <div class="mo-pill" onclick="wzToggleAnchor(this,'August')">August</div>
+          <div class="mo-pill" onclick="wzToggleAnchor(this,'September')">September</div>
+          <div class="mo-pill" onclick="wzToggleAnchor(this,'October')">October</div>
+          <div class="mo-pill" onclick="wzToggleAnchor(this,'November')">November</div>
+          <div class="mo-pill sel" onclick="wzToggleAnchor(this,'December')">December</div>
         </div>
-        <p id="mo-hint" style="font-size:11px;color:var(--gold-light);min-height:16px;margin-bottom:0.75rem"></p>
+        <p id="mo-hint" style="font-size:11px;color:var(--gold-light);min-height:16px;margin-bottom:1.25rem"></p>
 
-        <p style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--parchment);margin-bottom:0.5rem">Additional months <span style="color:var(--parch-dim);text-transform:none;letter-spacing:0;font-size:10px">— optional, add more any time</span></p>
-        <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.5rem" id="mo-extra-grid">
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'January')">Jan</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'February')">Feb</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'March')">Mar</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'April')">Apr</div>
+        <p class="wz-label" style="margin-bottom:0.5rem">Additional months <span style="font-weight:400;opacity:0.6">— optional</span></p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem" id="mo-extra-grid">
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'January')">January</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'February')">February</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'March')">March</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'April')">April</div>
           <div class="mo-pill extra" onclick="wzToggleExtra(this,'May')">May</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'June')">Jun</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'July')">Jul</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'August')">Aug</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'September')">Sep</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'October')">Oct</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'November')">Nov</div>
-          <div class="mo-pill extra" onclick="wzToggleExtra(this,'December')">Dec</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'June')">June</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'July')">July</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'August')">August</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'September')">September</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'October')">October</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'November')">November</div>
+          <div class="mo-pill extra" onclick="wzToggleExtra(this,'December')">December</div>
         </div>
-        <p style="font-size:11px;color:var(--parch-dim);line-height:1.5;margin-bottom:1rem">You can always add more months from your journal summary page later in the year.</p>
+        <p style="font-size:12px;color:var(--parch-dim);line-height:1.6;margin-bottom:1.25rem">You can add more months any time from your journal during the year.</p>
+
         <div class="wz-btns">
           <button class="wz-back" onclick="wzGo(2)">Back</button>
           <button class="wz-next" onclick="wzGo(4)">Begin the year</button>
@@ -718,6 +723,7 @@ select.f-inp option{background:var(--surface)}
       <button class="footer-link" onclick="goto('understand')">Understanding Fasting</button>
       <button class="footer-link" onclick="goto('privacy')">Privacy Policy</button>
       <a href="/journal" class="footer-link" style="text-decoration:none">My Journal</a>
+      <button class="footer-link" onclick="goto('fastguide')">Fasting Guide</button>
     </div>
   </footer>
 </div>
@@ -769,6 +775,263 @@ select.f-inp option{background:var(--surface)}
     <div class="footer-links">
       <button class="footer-link" onclick="goto('landing')">Home</button>
       <button class="footer-link" onclick="goto('wizard')">Begin my fast</button>
+      <button class="footer-link" onclick="goto('privacy')">Privacy Policy</button>
+      <a href="/journal" class="footer-link" style="text-decoration:none">My Journal</a>
+      <button class="footer-link" onclick="goto('fastguide')">Fasting Guide</button>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════
+     PAGE 6 — FASTING GUIDE
+════════════════════════════════════ -->
+<div class="page" id="page-fastguide">
+
+  <div style="padding:5rem 1.5rem 3.5rem;text-align:center;background:var(--surface2);border-bottom:1px solid var(--border)">
+    <p class="section-eyebrow">Practical guidance</p>
+    <h1 class="section-title">The Fasting Guide</h1>
+    <p class="section-sub" style="max-width:560px;margin:0 auto">Everything you need to fast well — spiritually and physically. Return to this page any time during your fast.</p>
+  </div>
+
+  <div style="max-width:860px;margin:0 auto;padding:4rem 1.5rem">
+
+    <!-- WHAT TO DO -->
+    <div style="margin-bottom:4rem">
+      <p class="section-eyebrow">During your fast</p>
+      <h2 class="section-title" style="font-size:1.75rem;margin-bottom:1rem">What to do</h2>
+      <p style="color:var(--parchment-dim);line-height:1.8;margin-bottom:2rem">Fasting is not just about what you stop. It is about what you start — intentional pursuit of God in the space created by the fast.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">🙏 Pray with intention</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Use your hunger as a prayer trigger. Every time you feel the urge to eat, turn it into a moment of prayer. Pray at the four daily prayer times — 9am, 12pm, 3pm, and 6pm.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">📖 Read Scripture</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Let fasting sharpen your focus on the Word. Read slowly. Meditate on one passage at a time. Let God speak through what you read.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">✍️ Journal what God says</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Write everything — impressions, scriptures, dreams, words. Fasting opens your spiritual sensitivity. Don't let what God says go unrecorded.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">🤫 Practise silence</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Set aside at least 15 minutes each day to sit in complete silence before God. No phone, no music, no agenda. Just you and Him.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">🙌 Worship</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Play worship music. Sing. Lift your hands. Worship shifts the atmosphere around you and within you, especially during a fast.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">💧 Stay hydrated</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Drink plenty of water throughout the day — especially on a full or partial fast. Herbal teas (unsweetened) are also fine on most fasts.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:4rem"></div>
+
+    <!-- WHAT TO AVOID -->
+    <div style="margin-bottom:4rem">
+      <p class="section-eyebrow">During your fast</p>
+      <h2 class="section-title" style="font-size:1.75rem;margin-bottom:1rem">What to avoid</h2>
+      <p style="color:var(--parchment-dim);line-height:1.8;margin-bottom:2rem">Fasting without discipline in other areas can undermine the spiritual work. Guard the fast in every dimension.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">📱 Social media &amp; entertainment</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">A fast from food while feasting on content defeats the purpose. Reduce screen time significantly. Use the time you'd spend scrolling for prayer and Scripture instead.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">💬 Negative conversation</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Gossip, complaining, and conflict are especially harmful during a fast. Isaiah 58 is clear — the fast God chooses involves right relationships, not just right eating.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">😤 Striving and overworking</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Fasting is not a performance. It is surrender. Resist the temptation to use fasting as leverage — as if you are making God owe you something.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">🍫 Cheat eating</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">If you are on a Daniel Fast or partial fast, be honest with yourself. Sneaking food you have committed to give up breaks the covenant of the fast, not just the diet.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">😴 Excessive sleep</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Use the extra mental space fasting creates for God, not for extra hours in bed. Early mornings during a fast are some of the most powerful prayer times.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <p style="font-size:1rem;font-weight:500;color:var(--parchment);margin-bottom:0.5rem">⚡ Overexertion</p>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Especially on a total or extended fast, do not push your body to its limits physically. Rest is appropriate. Listen to your body.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:4rem"></div>
+
+    <!-- HOW TO BREAK A FAST -->
+    <div style="margin-bottom:4rem">
+      <p class="section-eyebrow">Ending your fast</p>
+      <h2 class="section-title" style="font-size:1.75rem;margin-bottom:1rem">How to break a fast</h2>
+      <p style="color:var(--parchment-dim);line-height:1.8;margin-bottom:2rem">Breaking a fast is as important as the fast itself — spiritually and physically. Do not rush it.</p>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-bottom:1.5rem">
+        <p style="color:var(--gold-light);font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;margin-bottom:1rem;font-family:sans-serif">Spiritually</p>
+        <p style="color:var(--parchment-dim);line-height:1.8;margin-bottom:1rem">Before you eat anything, take a moment to close the fast in prayer. Thank God for what He has done and said during the fast. Declare what you are carrying forward. Do not let the fast end without a moment of worship.</p>
+        <p style="color:var(--parchment);font-style:italic;font-size:1rem;line-height:1.7;margin:0">"The fast does not end when you eat — it ends when you have sealed what God has done in you."</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem">
+        <p style="color:var(--gold-light);font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;margin-bottom:1rem;font-family:sans-serif">Physically — breaking it gently</p>
+        <div style="display:flex;flex-direction:column;gap:0.85rem">
+          <div style="padding:1rem;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+            <p style="color:var(--gold-light);font-size:0.8rem;font-weight:500;font-family:sans-serif;margin-bottom:4px">After a 1-day fast</p>
+            <p style="color:var(--parchment-dim);font-size:13px;line-height:1.6;margin:0">Start with water, fruit juice, or a small piece of fruit. Wait 30 minutes before eating a light meal such as soup, salad, or steamed vegetables.</p>
+          </div>
+          <div style="padding:1rem;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+            <p style="color:var(--gold-light);font-size:0.8rem;font-weight:500;font-family:sans-serif;margin-bottom:4px">After a 3–7 day fast</p>
+            <p style="color:var(--parchment-dim);font-size:13px;line-height:1.6;margin:0">Reintroduce food gradually over 1–2 days. Begin with diluted juices and broths, then soft fruits and vegetables, then normal foods. Avoid heavy, fried, or processed food immediately.</p>
+          </div>
+          <div style="padding:1rem;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+            <p style="color:var(--gold-light);font-size:0.8rem;font-weight:500;font-family:sans-serif;margin-bottom:4px">After a 14–21 day fast</p>
+            <p style="color:var(--parchment-dim);font-size:13px;line-height:1.6;margin:0">Treat the re-feeding period with great care. Spend the same number of days reintroducing food as you spent fasting (up to a week). Start with juices, then broths, then soft foods. Listen to your body closely.</p>
+          </div>
+          <div style="padding:1rem;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+            <p style="color:var(--gold-light);font-size:0.8rem;font-weight:500;font-family:sans-serif;margin-bottom:4px">On a Daniel Fast</p>
+            <p style="color:var(--parchment-dim);font-size:13px;line-height:1.6;margin:0">Transition back to normal food gradually. Introduce animal proteins and dairy slowly — your digestive system will have adjusted to plant-based foods.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:4rem"></div>
+
+    <!-- WHAT YOU MIGHT FEEL -->
+    <div style="margin-bottom:4rem">
+      <p class="section-eyebrow">Physical experience</p>
+      <h2 class="section-title" style="font-size:1.75rem;margin-bottom:1rem">What you might feel — and what it means</h2>
+      <p style="color:var(--parchment-dim);line-height:1.8;margin-bottom:2rem">Your body will respond to fasting. Most of what you feel is normal. Understanding it keeps you from giving up prematurely.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <p style="font-size:0.95rem;font-weight:500;color:var(--parchment);margin:0">Headaches</p>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(196,153,58,0.15);color:var(--gold-light);font-family:sans-serif">Normal</span>
+          </div>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Usually caused by caffeine withdrawal or dehydration. Drink more water. If you normally drink coffee, reduce it gradually before a fast rather than stopping abruptly.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <p style="font-size:0.95rem;font-weight:500;color:var(--parchment);margin:0">Dizziness</p>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(196,153,58,0.15);color:var(--gold-light);font-family:sans-serif">Normal (mild)</span>
+          </div>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Especially when standing up quickly. Move slowly, rest when needed. If severe, break the fast and consult a doctor.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <p style="font-size:0.95rem;font-weight:500;color:var(--parchment);margin:0">Fatigue &amp; weakness</p>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(196,153,58,0.15);color:var(--gold-light);font-family:sans-serif">Normal</span>
+          </div>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Your body is conserving energy. Days 2–3 are often the hardest. Many people experience a burst of clarity and energy from day 4 onward.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <p style="font-size:0.95rem;font-weight:500;color:var(--parchment);margin:0">Hunger pangs</p>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(196,153,58,0.15);color:var(--gold-light);font-family:sans-serif">Normal</span>
+          </div>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">They come in waves and usually pass within 20 minutes. Use them as prayer prompts. The hunger itself is part of the discipline.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <p style="font-size:0.95rem;font-weight:500;color:var(--parchment);margin:0">Heightened sensitivity</p>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(196,153,58,0.15);color:var(--gold-light);font-family:sans-serif">Expected</span>
+          </div>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Dreams, impressions, clarity of thought, and a deeper awareness of God's presence are common during extended fasting. Take note of everything.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <p style="font-size:0.95rem;font-weight:500;color:var(--parchment);margin:0">Irritability</p>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(196,153,58,0.15);color:var(--gold-light);font-family:sans-serif">Normal</span>
+          </div>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Fasting can surface things buried under comfort and routine. This is not a sign to stop — it is often a sign that God is dealing with something deeper.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <p style="font-size:0.95rem;font-weight:500;color:var(--parchment);margin:0">Bad breath</p>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(196,153,58,0.15);color:var(--gold-light);font-family:sans-serif">Normal</span>
+          </div>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">A sign your body is in ketosis (burning fat for energy). Stay hydrated and brush regularly.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <p style="font-size:0.95rem;font-weight:500;color:var(--parchment);margin:0">Nausea</p>
+            <span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(196,153,58,0.15);color:var(--gold-light);font-family:sans-serif">Sometimes</span>
+          </div>
+          <p style="font-size:13px;color:var(--parchment-dim);line-height:1.6;margin:0">Often occurs in the first day or two. Rest, sip water slowly. If persistent or severe, break the fast gently.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:4rem"></div>
+
+    <!-- WHEN NOT TO FAST -->
+    <div style="margin-bottom:4rem">
+      <p class="section-eyebrow">Important</p>
+      <h2 class="section-title" style="font-size:1.75rem;margin-bottom:1rem">When not to fast from food</h2>
+      <p style="color:var(--parchment-dim);line-height:1.8;margin-bottom:1.5rem">God honours your desire to fast. He does not require you to harm your body to do so. If any of the following apply, consider a non-food fast instead — a media fast, a social media fast, or a fast from entertainment.</p>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem">
+        <ul style="color:var(--parchment-dim);font-size:14px;line-height:2.2;margin:0;padding-left:1.25rem">
+          <li>Pregnancy or breastfeeding</li>
+          <li>Diabetes or blood sugar conditions</li>
+          <li>Eating disorders (past or present)</li>
+          <li>Heart conditions or serious illness</li>
+          <li>Medication that requires food</li>
+          <li>Children under 18 — consult a parent or guardian</li>
+          <li>Post-surgery recovery</li>
+        </ul>
+      </div>
+      <p style="color:var(--parchment-dim);font-size:13px;line-height:1.7;font-style:italic">Always consult your doctor before beginning an extended fast, especially if you have any underlying health conditions. Keep Me At The Altar is a spiritual platform, not a medical one. Your health matters to God.</p>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin-bottom:4rem"></div>
+
+    <!-- TYPES OF FAST TABLE -->
+    <div style="margin-bottom:4rem">
+      <p class="section-eyebrow">Quick reference</p>
+      <h2 class="section-title" style="font-size:1.75rem;margin-bottom:1.5rem">Types of fast at a glance</h2>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:var(--surface)">
+              <th style="text-align:left;padding:10px 12px;color:var(--gold-light);font-family:sans-serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border)">Fast Type</th>
+              <th style="text-align:left;padding:10px 12px;color:var(--gold-light);font-family:sans-serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border)">What it involves</th>
+              <th style="text-align:left;padding:10px 12px;color:var(--gold-light);font-family:sans-serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border)">Biblical example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:var(--bg)"><td style="padding:10px 12px;color:var(--parchment);border-bottom:1px solid var(--border);font-weight:500">Total Fast</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border)">No food or water for 24hrs or less</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border);font-style:italic">Esther 4:16 — Esther &amp; the Jews</td></tr>
+            <tr style="background:var(--surface)"><td style="padding:10px 12px;color:var(--parchment);border-bottom:1px solid var(--border);font-weight:500">Normal Fast</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border)">No food, water only</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border);font-style:italic">Jesus — Matthew 4:2</td></tr>
+            <tr style="background:var(--bg)"><td style="padding:10px 12px;color:var(--parchment);border-bottom:1px solid var(--border);font-weight:500">Daniel Fast</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border)">No meat, dairy, sweets or wine — vegetables &amp; water</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border);font-style:italic">Daniel 1:8-16, Daniel 10:3</td></tr>
+            <tr style="background:var(--surface)"><td style="padding:10px 12px;color:var(--parchment);border-bottom:1px solid var(--border);font-weight:500">Partial Fast</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border)">Skip one or two meals, or fast until a set time</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border);font-style:italic">Various — flexible</td></tr>
+            <tr style="background:var(--bg)"><td style="padding:10px 12px;color:var(--parchment);border-bottom:1px solid var(--border);font-weight:500">Intermittent Fast</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border)">Fast for a set window daily (e.g. 6am–6pm)</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border);font-style:italic">Common in early church practice</td></tr>
+            <tr style="background:var(--surface)"><td style="padding:10px 12px;color:var(--parchment);border-bottom:1px solid var(--border);font-weight:500">Media Fast</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border)">No social media, news or entertainment</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border);font-style:italic">Isaiah 58 principle — redirecting appetite</td></tr>
+            <tr style="background:var(--bg)"><td style="padding:10px 12px;color:var(--parchment);border-bottom:1px solid var(--border);font-weight:500">Generosity Fast</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border)">Give something away on every fasting day</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border);font-style:italic">Isaiah 58:6-7</td></tr>
+            <tr style="background:var(--surface)"><td style="padding:10px 12px;color:var(--parchment);border-bottom:1px solid var(--border);font-weight:500">Corporate Fast</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border)">Fasting together as a group or church</td><td style="padding:10px 12px;color:var(--parchment-dim);border-bottom:1px solid var(--border);font-style:italic">Acts 13:2-3, Joel 2:15-16</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="text-align:center;padding:3rem 1.5rem;background:var(--surface);border-radius:12px;border:1px solid var(--border)">
+      <p class="section-eyebrow">You are ready</p>
+      <h2 style="color:var(--parchment);font-size:1.5rem;margin-bottom:0.75rem">Now begin</h2>
+      <p style="color:var(--parchment-dim);font-size:14px;line-height:1.7;max-width:480px;margin:0 auto 1.5rem">You have the knowledge. You have the guide. The only thing left is the fast itself. Go with God.</p>
+      <button class="btn-primary" onclick="goto('wizard')">Personalise my journal &rarr;</button>
+    </div>
+
+  </div>
+
+  <footer style="border-top:1px solid var(--border);padding:2rem 1.5rem;margin-top:4rem">
+    <div style="max-width:860px;margin:0 auto;display:flex;justify-content:center;gap:2rem;flex-wrap:wrap">
+      <button class="footer-link" onclick="goto('landing')">Home</button>
+      <button class="footer-link" onclick="goto('understand')">Understanding Fasting</button>
+      <button class="footer-link" onclick="goto('testimonies')">Testimonies</button>
       <button class="footer-link" onclick="goto('privacy')">Privacy Policy</button>
       <a href="/journal" class="footer-link" style="text-decoration:none">My Journal</a>
     </div>
@@ -873,7 +1136,7 @@ function goto(page){
   window.scrollTo(0,0);
   // update nav active state
   document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active-link'));
-  const map={understand:'nl-understand',testimonies:'nl-testimonies'};
+  const map={understand:'nl-understand',testimonies:'nl-testimonies',fastguide:'nl-fastguide'};
   if(map[page]) document.getElementById(map[page]).classList.add('active-link');
   // render testimony wall when visiting
   if(page==='testimonies') renderWall();
@@ -1161,49 +1424,4 @@ function downloadJournal() {
 
 </script>
 </body>
-</html><div class="step" id="step-3">
-    <p class="step-eyebrow">Step 4 of 4 — Anchor</p>
-    <h1 class="step-title">Your months</h1>
-    <p class="step-subtitle">January, July and December are your anchor months — your non-negotiables. Tap to swap any, or add extra months below.</p>
-
-    <p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;margin-top:0.25rem">Anchor months <span style="color:var(--parchment-dim);text-transform:none;letter-spacing:0">— exactly 3</span></p>
-    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.5rem" id="anchor-grid">
-      <div class="mpill anchor selected" onclick="toggleAnchor(this,'January')">Jan</div>
-      <div class="mpill" onclick="toggleAnchor(this,'February')">Feb</div>
-      <div class="mpill" onclick="toggleAnchor(this,'March')">Mar</div>
-      <div class="mpill" onclick="toggleAnchor(this,'April')">Apr</div>
-      <div class="mpill" onclick="toggleAnchor(this,'May')">May</div>
-      <div class="mpill" onclick="toggleAnchor(this,'June')">Jun</div>
-      <div class="mpill anchor selected" onclick="toggleAnchor(this,'July')">Jul</div>
-      <div class="mpill" onclick="toggleAnchor(this,'August')">Aug</div>
-      <div class="mpill" onclick="toggleAnchor(this,'September')">Sep</div>
-      <div class="mpill" onclick="toggleAnchor(this,'October')">Oct</div>
-      <div class="mpill" onclick="toggleAnchor(this,'November')">Nov</div>
-      <div class="mpill anchor selected" onclick="toggleAnchor(this,'December')">Dec</div>
-    </div>
-    <p id="anchor-hint" style="font-size:11px;color:var(--parchment-dim);min-height:14px;margin-bottom:1rem"></p>
-
-    <p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--parchment);margin-bottom:0.6rem">Additional months <span style="color:var(--parchment-dim);text-transform:none;letter-spacing:0">— optional</span></p>
-    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.4rem" id="active-grid">
-      <div class="mpill" onclick="toggleActive(this,'January')">Jan</div>
-      <div class="mpill" onclick="toggleActive(this,'February')">Feb</div>
-      <div class="mpill" onclick="toggleActive(this,'March')">Mar</div>
-      <div class="mpill" onclick="toggleActive(this,'April')">Apr</div>
-      <div class="mpill" onclick="toggleActive(this,'May')">May</div>
-      <div class="mpill" onclick="toggleActive(this,'June')">Jun</div>
-      <div class="mpill" onclick="toggleActive(this,'July')">Jul</div>
-      <div class="mpill" onclick="toggleActive(this,'August')">Aug</div>
-      <div class="mpill" onclick="toggleActive(this,'September')">Sep</div>
-      <div class="mpill" onclick="toggleActive(this,'October')">Oct</div>
-      <div class="mpill" onclick="toggleActive(this,'November')">Nov</div>
-      <div class="mpill" onclick="toggleActive(this,'December')">Dec</div>
-    </div>
-    <p style="font-size:11px;color:var(--parchment-dim);line-height:1.5;margin-bottom:1.25rem">Anchor months are already in your journal. Add extras now or any time during the year.</p>
-
-    <div class="btn-row">
-      <button class="btn-back" onclick="goTo(2)">Back</button>
-      <button class="btn-next" id="btn-3" onclick="goTo(4)">Begin the year</button>
-    </div>
-  </div>
-
-
+</html>
