@@ -1520,18 +1520,16 @@ loadCommunityCounter()
 
 // ── OPEN JOURNAL ──────────────────────────────────────
 function openJournal() {
-  const email = document.getElementById('wz-name') ? '' : ''
-  const btn = document.querySelector('.btn-journal')
-  btn.textContent = 'Sending your link...'
-  btn.disabled = true
   const savedEmail = localStorage.getItem('kmata_email')
-  const name = document.getElementById('wz-name')?.value.trim() || wz.name || ''
   if (savedEmail) {
     window.location.href = '/journal'
     return
   }
   const userEmail = prompt('Enter your email to access your journal:')
-  if (!userEmail) { btn.textContent = 'Open my web journal'; btn.disabled = false; return }
+  if (!userEmail) return
+  const btn = document.querySelector('.btn-journal')
+  btn.textContent = 'Sending your link...'
+  btn.disabled = true
   localStorage.setItem('kmata_email', userEmail)
   fetch('/api/auth/magic-link', {
     method: 'POST',
@@ -1539,12 +1537,16 @@ function openJournal() {
     body: JSON.stringify({ email: userEmail })
   })
   .then(r => r.json())
-  .then(d => {
+  .then(() => {
     btn.textContent = 'Check your email ✓'
     btn.disabled = false
     alert('Magic link sent to ' + userEmail + ' — check your inbox and click the link to open your journal.')
   })
-  .catch(() => { btn.textContent = 'Open my web journal'; btn.disabled = false })
+  .catch(() => {
+    btn.textContent = 'Open my web journal'
+    btn.disabled = false
+    alert('Something went wrong. Please try again.')
+  })
 }
 
 // ── CALENDAR HELPERS ──────────────────────────────────
@@ -1666,4 +1668,4 @@ function setupEmailReminders() {
 
 </script>
 </body>
-</html> 
+</html>
