@@ -7,6 +7,7 @@ export async function GET(request) {
     const supabaseAdmin = getSupabaseAdmin()
     const { searchParams } = new URL(request.url)
     const email = searchParams.get('email')
+    const status = searchParams.get('status') || 'pending'
 
     if (!ADMINS.includes(email)) {
       return Response.json({ error: 'Unauthorised' }, { status: 403 })
@@ -15,7 +16,7 @@ export async function GET(request) {
     const { data } = await supabaseAdmin
       .from('testimonies')
       .select('*')
-      .eq('status', 'pending')
+      .eq('status', status)
       .order('created_at', { ascending: false })
 
     return Response.json(data || [])
