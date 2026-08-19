@@ -204,7 +204,7 @@ class _PillLabel(Spacer):
         tw = c.stringWidth(self.pill_text, "Helvetica", 7)
         pw = tw + 14
         ph = 11
-        px = MARGIN_L
+        px = 0
         py = self._y + 1 if hasattr(self, '_y') else 2
         c.setFillColor(GOLD)
         c.roundRect(px, py, pw, ph, 3.5, fill=1, stroke=0)
@@ -1007,7 +1007,7 @@ class _FieldSpacer(Spacer):
     _registry = []
 
     def __init__(self, name, height):
-        super().__init__(1, height)
+        super().__init__(CONTENT_W, height)
         self.field_name = name
         _FieldSpacer._registry.append(self)
 
@@ -1020,7 +1020,7 @@ class _FieldSpacer(Spacer):
         c.setFillColor(colors.HexColor("#E5E0D6"))
         c.setStrokeColor(GOLD)
         c.setLineWidth(0.4)
-        c.roundRect(MARGIN_L, y + 1, CONTENT_W, h - 3, 3*mm, fill=1, stroke=1)
+        c.roundRect(0, y + 1, CONTENT_W, h - 3, 3*mm, fill=1, stroke=1)
         c.restoreState()
         # AcroForm text field on top
         c.acroForm.textfield(
@@ -1303,6 +1303,7 @@ def build_month(data, fasting_level, altar_day, anchor_months, styles):
     story += build_altar_day_page(data["name"], altar_day, 1, styles)
     story.append(PageBreak())
     story += build_altar_day_page(data["name"], altar_day, 2, styles)
+    # Note: no trailing PageBreak — next month adds its own at the start
 
     return story
 
@@ -1483,7 +1484,7 @@ if __name__ == "__main__":
             sys.exit(1)
     else:
         # Local test run
-        output = "/tmp/TheAltarYear_Journal_v2.pdf"
+        output = "/mnt/user-data/outputs/TheAltarYear_Journal_v2.pdf"
         os.makedirs(os.path.dirname(output), exist_ok=True)
         build_pdf(
             output_path=output,
