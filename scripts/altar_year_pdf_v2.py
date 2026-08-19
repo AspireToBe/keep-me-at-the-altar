@@ -1041,7 +1041,7 @@ class _FieldSpacer(Spacer):
 
 
 # ── MAIN BUILD FUNCTION ───────────────────────────────────
-def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months):
+def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months, active_months=None):
     global _user_name
     _user_name = user_name
 
@@ -1211,8 +1211,13 @@ def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months):
         ]))
     story.append(PageBreak())
 
-    # ── 12 MONTHS ──────────────────────────────────────────
-    for month_data in MONTHS:
+    # ── SELECTED MONTHS ONLY ──────────────────────────────
+    all_selected = list(anchor_months) + [m for m in (active_months or []) if m not in anchor_months]
+    # Keep order consistent with calendar year
+    month_names = [m["name"] for m in MONTHS]
+    ordered_months = [m for m in month_names if m in all_selected]
+    selected_month_data = [m for m in MONTHS if m["name"] in ordered_months]
+    for month_data in selected_month_data:
         story += build_month(month_data, fasting_level, altar_day, anchor_months, styles)
 
     # ── CLOSING ────────────────────────────────────────────
@@ -1303,7 +1308,10 @@ def build_month(data, fasting_level, altar_day, anchor_months, styles):
     story += build_altar_day_page(data["name"], altar_day, 1, styles)
     story.append(PageBreak())
     story += build_altar_day_page(data["name"], altar_day, 2, styles)
-    # Note: no trailing PageBreak — next month adds its own at the start
+    story.append(PageBreak())
+    story += build_altar_day_page(data["name"], altar_day, 3, styles)
+    story.append(PageBreak())
+    story += build_altar_day_page(data["name"], altar_day, 4, styles)
 
     return story
 
