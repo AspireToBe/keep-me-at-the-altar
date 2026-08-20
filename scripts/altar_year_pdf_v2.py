@@ -1310,10 +1310,10 @@ def build_month(data, fasting_level, altar_days, anchor_months, styles, day_inte
     story += build_month_reflection(data["name"], styles)
 
     # ── Altar Day pages ────────────────────────────────────
-    # Generate 4 weeks of altar day pages for each selected altar day
+    # Generate altar day pages — week by week, all days per week
     day_intentions = day_intentions or {}
-    for ad in altar_days:
-        for week in range(1, 5):
+    for week in range(1, 5):
+        for ad in altar_days:
             story.append(PageBreak())
             story += build_altar_day_page(data["name"], ad, week, styles,
                                           intention=day_intentions.get(ad, ''))
@@ -1527,8 +1527,8 @@ def build_altar_only_pdf(output_path, user_name, altar_days, anchor_months, acti
     ordered = [m for m in month_names if m in all_selected]
 
     for month_name in ordered:
-        for ad in altar_days:
-            for week in range(1, 5):
+        for week in range(1, 5):
+            for ad in altar_days:
                 story.append(PageBreak())
                 story += build_altar_day_page(month_name, ad, week, styles,
                                               intention=day_intentions.get(ad, ''))
@@ -1541,9 +1541,15 @@ if __name__ == "__main__":
     import sys, json
 
     if len(sys.argv) >= 3:
-        # Called from the API: python keep_me_at_the_altar_pdf_v2.py '{"name":...}' '/tmp/out.pdf'
+        # Called from the API
+        # Supports @/path/to/args.json to avoid shell escaping issues
         try:
-            config = json.loads(sys.argv[1])
+            arg1 = sys.argv[1]
+            if arg1.startswith('@'):
+                with open(arg1[1:]) as _f:
+                    config = json.load(_f)
+            else:
+                config = json.loads(arg1)
             output = sys.argv[2]
             os.makedirs(os.path.dirname(output), exist_ok=True)
             if config.get("altar_only"):
