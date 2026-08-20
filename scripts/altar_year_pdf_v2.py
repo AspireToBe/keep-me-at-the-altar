@@ -1041,9 +1041,15 @@ class _FieldSpacer(Spacer):
 
 
 # ── MAIN BUILD FUNCTION ───────────────────────────────────
-def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months, active_months=None):
+def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months, active_months=None, altar_days=None, day_intentions=None):
     global _user_name
     _user_name = user_name
+
+    # Normalise altar_days — support single or multiple
+    if altar_days is None or len(altar_days) == 0:
+        altar_days = [altar_day] if altar_day else ['Saturday']
+    day_intentions = day_intentions or {}
+    days_label = " & ".join(altar_days)
 
     styles = S()
 
@@ -1112,7 +1118,7 @@ def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months, a
         "structure, scripture, and direction.", styles["body"]))
     story.append(Spacer(1, 3*mm))
     for title, desc in [
-        ("Your Altar Day", f"Every {altar_day} is your weekly reset — one day set apart to fast, listen, and align."),
+        ("Your Altar Day", f"Every {days_label} is your weekly reset — one day set apart to fast, listen, and align."),
         ("Your Fasting Level", f"You have chosen the {fasting_level} level. Adjust month by month as the Spirit leads."),
         ("Your Anchor Months", f"{', '.join(anchor_months)} are your three anchor months — the non-negotiable spiritual gates of the year."),
         ("Guided Fasting Days", "Each month has 5 structured fasting days with teaching, scripture, your Appointment with God, and fillable journal fields."),
@@ -1164,18 +1170,18 @@ def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months, a
     story.append(PageBreak())
 
     # ── THREE ANCHOR MONTHS ────────────────────────────────
-    story += section_head("Your Anchor Months", f"{anchor_months[0]}, {anchor_months[1]} & {anchor_months[2]}", styles)
+    story += section_head("Your Anchor Months", " · ".join(anchor_months), styles)
     story.append(Paragraph(
         "These three months carry particular weight. They are spiritual gates and "
         "God-ordained pillars that shape the year. They establish foundation, realign "
         "your course, and bring the year to a purposeful close.", styles["body"]))
     story.append(Spacer(1, 3*mm))
     roles = [
-        ("The Gate — Open the Year", anchor_months[0],
+        ("The Gate — Open the Year", anchor_months[0] if len(anchor_months) > 0 else "Month 1",
          "What you consecrate, seek, and declare in this month sets the tone for the 12 months that follow."),
-        ("The Midpoint — Review & Recommit", anchor_months[1],
+        ("The Midpoint — Review & Recommit", anchor_months[1] if len(anchor_months) > 1 else anchor_months[0],
          "A divine halftime to pause, review progress, and recalibrate your heart for the second half."),
-        ("The Closing — End with Honour", anchor_months[2],
+        ("The Closing — End with Honour", anchor_months[2] if len(anchor_months) > 2 else anchor_months[-1],
          "The spiritual closing of the year — reflection, worship, surrender, and purposeful conclusion."),
     ]
     for role, month, desc in roles:
@@ -1189,9 +1195,9 @@ def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months, a
     story.append(PageBreak())
 
     # ── ALTAR DAY ──────────────────────────────────────────
-    story += section_head("Weekly Practice", f"Your {altar_day} Altar Day", styles)
+    story += section_head("Weekly Practice", f"Your Altar Day{'s' if len(altar_days) > 1 else ''}", styles)
     story.append(Paragraph(
-        f"Every {altar_day} is your weekly reset — one day set apart not just to fast, "
+        f"Every {days_label} is your weekly reset — one day set apart not just to fast, "
         "but to return. Bring your week to God before it takes you somewhere you did not "
         "intend to go.", styles["body"]))
     story.append(Spacer(1, 3*mm))
@@ -1218,7 +1224,7 @@ def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months, a
     ordered_months = [m for m in month_names if m in all_selected]
     selected_month_data = [m for m in MONTHS if m["name"] in ordered_months]
     for month_data in selected_month_data:
-        story += build_month(month_data, fasting_level, altar_day, anchor_months, styles)
+        story += build_month(month_data, fasting_level, altar_days, anchor_months, styles, day_intentions)
 
     # ── CLOSING ────────────────────────────────────────────
     story.append(PageBreak())
@@ -1252,7 +1258,7 @@ def build_pdf(output_path, user_name, fasting_level, altar_day, anchor_months, a
     print(f"✓ PDF generated: {output_path}")
 
 
-def build_month(data, fasting_level, altar_day, anchor_months, styles):
+def build_month(data, fasting_level, altar_days, anchor_months, styles, day_intentions=None):
     _current_month[0] = data["name"]
     story = []
     is_anchor = data["name"] in anchor_months
@@ -1269,7 +1275,7 @@ def build_month(data, fasting_level, altar_day, anchor_months, styles):
     story += scripture_block(data["scripture_text"], data["scripture_ref"], styles)
     story.append(Spacer(1, 3*mm))
     story.append(info_table(level_fast(data["name"], fasting_level),
-                            data["prayer_focus"], altar_day, styles))
+                            data["prayer_focus"], altar_days, styles))
     story.append(Spacer(1, 4*mm))
 
     # Intro paragraph
@@ -1304,14 +1310,13 @@ def build_month(data, fasting_level, altar_day, anchor_months, styles):
     story += build_month_reflection(data["name"], styles)
 
     # ── Altar Day pages ────────────────────────────────────
-    story.append(PageBreak())
-    story += build_altar_day_page(data["name"], altar_day, 1, styles)
-    story.append(PageBreak())
-    story += build_altar_day_page(data["name"], altar_day, 2, styles)
-    story.append(PageBreak())
-    story += build_altar_day_page(data["name"], altar_day, 3, styles)
-    story.append(PageBreak())
-    story += build_altar_day_page(data["name"], altar_day, 4, styles)
+    # Generate 4 weeks of altar day pages for each selected altar day
+    day_intentions = day_intentions or {}
+    for ad in altar_days:
+        for week in range(1, 5):
+            story.append(PageBreak())
+            story += build_altar_day_page(data["name"], ad, week, styles,
+                                          intention=day_intentions.get(ad, ''))
 
     return story
 
@@ -1397,10 +1402,13 @@ def build_month_reflection(month_name, styles):
     return story
 
 
-def build_altar_day_page(month_name, altar_day, week_num, styles):
+def build_altar_day_page(month_name, altar_day, week_num, styles, intention=""):
     story = []
     story.append(Paragraph(f"{month_name.upper()} · WEEK {week_num} · ALTAR DAY", styles["eyebrow"]))
-    story.append(Paragraph(f"{altar_day} — Weekly Journal", styles["h2"]))
+    title = f"{altar_day} — Weekly Journal"
+    if intention:
+        title += f"  ·  {intention}"
+    story.append(Paragraph(title, styles["h2"]))
     story.append(divider())
 
     for title, prompt in [
@@ -1450,9 +1458,10 @@ def scripture_block(verse, ref, styles):
     ]
 
 def info_table(fast_desc, prayer_focus, altar_day, styles):
+    altar_label = altar_day if isinstance(altar_day, str) else " & ".join(altar_day)
     data = [
         ["Fast Type","Prayer Focus","Altar Day"],
-        [fast_desc, prayer_focus, f"Every {altar_day}"],
+        [fast_desc, prayer_focus, altar_label],
     ]
     t = Table(data, colWidths=[55*mm, 58*mm, 52*mm])
     t.setStyle(TableStyle([
@@ -1471,6 +1480,63 @@ def info_table(fast_desc, prayer_focus, altar_day, styles):
     return t
 
 
+
+def build_altar_only_pdf(output_path, user_name, altar_days, anchor_months, active_months=None, day_intentions=None):
+    """Generate a PDF containing only the altar day pages — for printing."""
+    if altar_days is None or len(altar_days) == 0:
+        altar_days = ['Saturday']
+    day_intentions = day_intentions or {}
+    days_label = " & ".join(altar_days)
+
+    styles = S()
+
+    doc = SimpleDocTemplate(
+        output_path,
+        pagesize=A4,
+        leftMargin=MARGIN_L, rightMargin=MARGIN_R,
+        topMargin=MARGIN_T, bottomMargin=MARGIN_B,
+        title=f"Keep Me At The Altar — {user_name} — Altar Days",
+        author="Keep Me At The Altar™",
+    )
+
+    story = []
+
+    # Cover
+    story.append(Spacer(1, 40*mm))
+    story.append(Paragraph("🕯", ParagraphStyle("c_icon", fontName="Helvetica",
+        fontSize=28, alignment=TA_CENTER, textColor=GOLD, spaceAfter=10)))
+    story.append(Paragraph("KEEP ME AT THE ALTAR™", ParagraphStyle("c_brand",
+        fontName="Helvetica", fontSize=10, alignment=TA_CENTER,
+        textColor=GOLD, spaceAfter=4, charSpace=2)))
+    story.append(Paragraph(user_name, ParagraphStyle("c_name",
+        fontName="Helvetica", fontSize=22, alignment=TA_CENTER,
+        textColor=colors.HexColor("#1E1B16"), spaceAfter=6)))
+    story.append(Paragraph(f"Altar Day Journal — {days_label}", ParagraphStyle("c_sub",
+        fontName="Helvetica", fontSize=12, alignment=TA_CENTER,
+        textColor=colors.HexColor("#5A5347"), spaceAfter=4)))
+    story.append(gold_divider())
+    story.append(Spacer(1, 6*mm))
+    story.append(Paragraph("Weekly reset pages for fasting, listening, and alignment.",
+        ParagraphStyle("c_body", fontName="Helvetica", fontSize=10,
+        alignment=TA_CENTER, textColor=colors.HexColor("#5A5347"))))
+    story.append(PageBreak())
+
+    # Altar day pages for each selected month × each altar day × 4 weeks
+    all_selected = list(anchor_months) + [m for m in (active_months or []) if m not in anchor_months]
+    month_names = [m["name"] for m in MONTHS]
+    ordered = [m for m in month_names if m in all_selected]
+
+    for month_name in ordered:
+        for ad in altar_days:
+            for week in range(1, 5):
+                story.append(PageBreak())
+                story += build_altar_day_page(month_name, ad, week, styles,
+                                              intention=day_intentions.get(ad, ''))
+
+    doc.build(story, onFirstPage=on_first_page, onLaterPages=on_later_pages)
+    print(f"✓ Altar-only PDF generated: {output_path}")
+
+
 if __name__ == "__main__":
     import sys, json
 
@@ -1480,13 +1546,26 @@ if __name__ == "__main__":
             config = json.loads(sys.argv[1])
             output = sys.argv[2]
             os.makedirs(os.path.dirname(output), exist_ok=True)
-            build_pdf(
-                output_path=output,
-                user_name=config.get("name", "Believer"),
-                fasting_level=config.get("level", "Standard"),
-                altar_day=config.get("altar_day", "Saturday"),
-                anchor_months=config.get("anchor_months", ["January", "July", "December"]),
-            )
+            if config.get("altar_only"):
+                build_altar_only_pdf(
+                    output_path=output,
+                    user_name=config.get("name", "Believer"),
+                    altar_days=config.get("altar_days", [config.get("altar_day", "Saturday")]),
+                    anchor_months=config.get("anchor_months", ["January", "July", "December"]),
+                    active_months=config.get("active_months", []),
+                    day_intentions=config.get("day_intentions", {}),
+                )
+            else:
+                build_pdf(
+                    output_path=output,
+                    user_name=config.get("name", "Believer"),
+                    fasting_level=config.get("level", "Standard"),
+                    altar_day=config.get("altar_day", "Saturday"),
+                    anchor_months=config.get("anchor_months", ["January", "July", "December"]),
+                    active_months=config.get("active_months", []),
+                    altar_days=config.get("altar_days", []),
+                    day_intentions=config.get("day_intentions", {}),
+                )
         except Exception as e:
             print(f"Error: {e}", file=sys.stderr)
             sys.exit(1)
@@ -1500,4 +1579,7 @@ if __name__ == "__main__":
             fasting_level="Intensive",
             altar_day="Saturday",
             anchor_months=["January", "July", "December"],
+            active_months=[],
+            altar_days=["Saturday", "Tuesday"],
+            day_intentions={"Saturday": "Personal fast", "Tuesday": "Family intercession"},
         )

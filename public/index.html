@@ -303,7 +303,7 @@ select.f-inp option{background:var(--surface)}
 
 <!-- ══ NAV ══ -->
 <nav>
-  <div class="nav-logo" onclick="goto('landing')">The Altar <span>Year™</span></div>
+  <div class="nav-logo" onclick="goto('landing')">Keep Me At The Altar<span style="display:block;font-size:0.55em;letter-spacing:0.08em;color:var(--gold-light);font-style:italic;font-weight:400;margin-top:-2px">The Altar Year™</span></div>
   <div class="nav-links">
     <button class="nav-link" id="nl-understand" onclick="goto('understand')">Understanding Fasting</button>
     <button class="nav-link" id="nl-fastguide" onclick="goto('fastguide')">Fasting Guide</button>
@@ -331,9 +331,10 @@ select.f-inp option{background:var(--surface)}
     </div>
     <p class="hero-eyebrow">A guided journey · 12 months · All believers</p>
     <h1 class="hero-title">Fasting is not the absence of food.<br><em>It is the presence of God.</em></h1>
-    <p class="hero-sub">Keep Me At The Altar is a free, guided 12-month fasting journal — structured, personalised, and built for every believer who wants more than routine devotion.</p>
+    <p class="hero-sub">Keep Me At The Altar is a free spiritual formation platform built around The Altar Year™ — a guided 12-month journey of fasting, prayer and reflection, personalised for every believer.</p>
+    <p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1rem;font-family:sans-serif">The Altar Year™ — Free for all believers</p>
     <div class="btn-row" style="justify-content:center">
-      <button class="btn-primary" onclick="goto('wizard')">Personalise my journal</button>
+      <button class="btn-primary" onclick="goto('wizard')">Begin The Altar Year</button>
       <button class="btn-secondary" onclick="goto('understand')">Understand fasting first</button>
     </div>
     <p class="hero-note">Free · No password required · Print or digital</p>
@@ -357,10 +358,10 @@ select.f-inp option{background:var(--surface)}
 
   <div class="divider"></div>
 
-  <!-- How it works -->
+  <!-- How The Altar Year works -->
   <div style="background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
     <div class="inner-wide">
-      <p class="section-eyebrow" style="text-align:center">How it works</p>
+      <p class="section-eyebrow" style="text-align:center">How The Altar Year works</p>
       <h2 class="section-title" style="text-align:center">One year. One system.<br><em>One encounter at a time.</em></h2>
       <div class="how-steps">
         <div class="how-step"><div class="how-num">01</div><div class="how-label">Understand</div><div class="how-desc">Read the biblical foundation. Know why you fast, not just how.</div></div>
@@ -376,7 +377,7 @@ select.f-inp option{background:var(--surface)}
   <!-- Journal Preview -->
   <div style="padding:4rem 1.5rem;max-width:960px;margin:0 auto">
     <p class="section-eyebrow" style="text-align:center">Inside your journal</p>
-    <h2 class="section-title" style="text-align:center;margin-bottom:0.5rem">See exactly what you get</h2>
+    <h2 class="section-title" style="text-align:center;margin-bottom:0.5rem">Inside The Altar Year™</h2>
     <p class="section-sub" style="text-align:center;max-width:520px;margin:0 auto 2.5rem">Three pages from a real personalised journal. Every month follows this structure — fasting days, weekly Altar Days, and a monthly reflection.</p>
 
     <div style="display:flex;gap:1.25rem;overflow-x:auto;padding-bottom:1rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch">
@@ -529,8 +530,9 @@ select.f-inp option{background:var(--surface)}
     <p class="section-eyebrow">Begin today</p>
     <h2 class="section-title">The altar is not a place.<br><em>It is a posture.</em></h2>
     <p class="body-text" style="max-width:420px;margin:0 auto 2rem">You do not need to be ready. You need to begin. The Holy Spirit does not lead people to tools they do not need.</p>
+    <p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1rem;font-family:sans-serif">The Altar Year™ — Free for all believers</p>
     <div class="btn-row" style="justify-content:center">
-      <button class="btn-primary" onclick="goto('wizard')">Personalise my journal</button>
+      <button class="btn-primary" onclick="goto('wizard')">Begin The Altar Year</button>
       <button class="btn-secondary" onclick="goto('understand')">Learn about fasting first</button>
     </div>
   </div>
@@ -789,12 +791,32 @@ select.f-inp option{background:var(--surface)}
       <!-- Step 3 -->
       <div class="wz-step" id="ws2">
         <p class="wz-eye">Step 3 of 4 — Rhythm</p>
-        <h2 class="wz-title">Your weekly Altar Day</h2>
-        <p class="wz-sub">One day each week set apart to always fast, listen, and align. Choose the day you can protect.</p>
-        <div class="day-grid">
-          <div class="day-btn" onclick="wzDay(this,'Sun')">Sun</div><div class="day-btn" onclick="wzDay(this,'Mon')">Mon</div><div class="day-btn" onclick="wzDay(this,'Tue')">Tue</div><div class="day-btn" onclick="wzDay(this,'Wed')">Wed</div><div class="day-btn" onclick="wzDay(this,'Thu')">Thu</div><div class="day-btn" onclick="wzDay(this,'Fri')">Fri</div><div class="day-btn" onclick="wzDay(this,'Sat')">Sat</div>
+        <h2 class="wz-title">Your Altar Days</h2>
+        <p class="wz-sub">Choose one or more days each week to fast and align with God. You can assign different days for different intentions — personal, family, intercession.</p>
+
+        <p class="wz-label" style="margin-bottom:0.5rem">Select your altar days <span style="font-weight:400;opacity:0.6">— choose at least one</span></p>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem" id="altar-day-grid">
+          <div class="mo-pill" onclick="wzToggleAltarDay(this,'Sun')">Sunday</div>
+          <div class="mo-pill" onclick="wzToggleAltarDay(this,'Mon')">Monday</div>
+          <div class="mo-pill" onclick="wzToggleAltarDay(this,'Tue')">Tuesday</div>
+          <div class="mo-pill" onclick="wzToggleAltarDay(this,'Wed')">Wednesday</div>
+          <div class="mo-pill" onclick="wzToggleAltarDay(this,'Thu')">Thursday</div>
+          <div class="mo-pill" onclick="wzToggleAltarDay(this,'Fri')">Friday</div>
+          <div class="mo-pill" onclick="wzToggleAltarDay(this,'Sat')">Saturday</div>
         </div>
-        <div class="wz-btns" style="margin-top:1.75rem"><button class="wz-back" onclick="wzGo(1)">Back</button><button class="wz-next" id="wbn2" onclick="wzGo(3)" disabled>Continue</button></div>
+
+        <!-- Intention labels per selected day -->
+        <div id="altar-day-intentions" style="display:none;background:rgba(196,153,58,0.06);border:1px solid rgba(196,153,58,0.2);border-radius:10px;padding:1rem;margin-bottom:0.75rem">
+          <p style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-light);font-family:sans-serif;margin-bottom:0.75rem">What is each day for? <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></p>
+          <div id="altar-intention-list" style="display:flex;flex-direction:column;gap:0.6rem"></div>
+        </div>
+
+        <p style="font-size:12px;color:var(--parch-dim);line-height:1.6;margin-bottom:1.25rem">Each altar day gets its own journal pages with morning, midday, afternoon and evening prayer slots.</p>
+
+        <div class="wz-btns" style="margin-top:1.75rem">
+          <button class="wz-back" onclick="wzGo(1)">Back</button>
+          <button class="wz-next" id="wbn2" onclick="wzGo(3)" disabled>Continue</button>
+        </div>
       </div>
       <!-- Step 4 -->
       <div class="wz-step" id="ws3">
@@ -850,12 +872,13 @@ select.f-inp option{background:var(--surface)}
       </div>
       <!-- Step 5 — Complete -->
       <div class="wz-step" id="ws4">
-        <p class="wz-eye" style="text-align:center">The altar is ready</p>
+        <p class="wz-eye" style="text-align:center">The Altar Year™</p>
         <h2 class="wz-title" id="wz-complete-title" style="text-align:center;font-size:1.7rem">The year belongs to God</h2>
         <p class="wz-sub" style="text-align:center">Your journal has been personalised. Choose how you would like to begin.</p>
         <div class="summary-box" id="wz-summary"></div>
         <button <button style="width:100%;background:transparent;border:1px solid rgba(196,153,58,0.35);border-radius:8px;padding:0.65rem;font-size:13px;color:var(--gold-light);cursor:pointer;margin-bottom:0.6rem" onclick="wzGo(3)">+ Add more fasting months</button>
         <button class="btn-pdf" id="btn-pdf" onclick="downloadJournal()"><span id="btn-pdf-text">Download my journal (PDF)</span></button>
+        <button class="btn-pdf" id="btn-altar-pdf" onclick="downloadAltarOnly()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);margin-top:0.5rem"><span id="btn-altar-text">Download altar days only (PDF)</span></button>
         <button class="btn-journal" onclick="openJournal()">Open my web journal</button>
 
         <!-- Calendar integration -->
@@ -1330,7 +1353,7 @@ function toggleType(row){
 }
 
 // ── WIZARD ──
-const wz={name:'',level:'',day:'',months:['January','July','December'],activeMonths:[]};
+const wz={name:'',level:'',day:'',days:[],dayIntentions:{},months:['January','July','December'],activeMonths:[]};
 const dayFull={Sun:'Sunday',Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday',Sat:'Saturday'};
 
 function wzGo(n){
@@ -1431,6 +1454,41 @@ function syncActiveGrid() {
 }
 
 
+function wzToggleAltarDay(el, val) {
+  if (el.classList.contains('sel')) {
+    el.classList.remove('sel');
+    wz.days = (wz.days || []).filter(d => d !== val);
+    delete (wz.dayIntentions || {})[val];
+  } else {
+    el.classList.add('sel');
+    wz.days = wz.days || [];
+    wz.days.push(val);
+  }
+  // Update legacy wz.day to first selected day
+  wz.day = wz.days[0] || '';
+  // Enable/disable continue button
+  document.getElementById('wbn2').disabled = wz.days.length === 0;
+  wzUpdateAltarIntentions();
+}
+
+function wzUpdateAltarIntentions() {
+  const container = document.getElementById('altar-day-intentions');
+  const list = document.getElementById('altar-intention-list');
+  const days = wz.days || [];
+  if (days.length === 0) { container.style.display = 'none'; return; }
+  container.style.display = 'block';
+  wz.dayIntentions = wz.dayIntentions || {};
+  list.innerHTML = days.map(d => `
+    <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+      <span style="font-size:13px;color:var(--parchment);font-family:sans-serif;min-width:80px">${dayFull[d]||d}</span>
+      <input placeholder="e.g. Personal fast, Family intercession..."
+        value="${wz.dayIntentions[d]||''}"
+        oninput="wz.dayIntentions['${d}']=this.value"
+        style="flex:1;padding:6px 10px;border-radius:6px;border:1px solid rgba(196,153,58,0.3);background:var(--surface);color:var(--parchment);font-size:12px;font-family:sans-serif;min-width:160px"/>
+    </div>
+  `).join('');
+}
+
 function wzToggleAnchor(el, val) {
   const isSel = el.classList.contains('sel');
   if (isSel) {
@@ -1525,7 +1583,8 @@ function buildSummary(){
   document.getElementById('wz-summary').innerHTML=`
     <div class="sum-row"><span class="sum-key">Name</span><span class="sum-val">${name}</span></div>
     <div class="sum-row"><span class="sum-key">Fasting level</span><span class="sum-val">${wz.level}</span></div>
-    <div class="sum-row"><span class="sum-key">Altar Day</span><span class="sum-val">${dayFull[wz.day]||wz.day}</span></div>
+    <div class="sum-row"><span class="sum-key">Altar Days</span><span class="sum-val">${(wz.days||[wz.day]).map(d=>dayFull[d]||d).join(' · ')}</span></div>
+    ${Object.keys(wz.dayIntentions||{}).length ? Object.entries(wz.dayIntentions||{}).map(([d,v])=>v?`<div class="sum-row"><span class="sum-key" style="padding-left:1rem;font-size:11px">${dayFull[d]||d}</span><span class="sum-val" style="font-size:12px">${v}</span></div>`:'').join('') : ''}
     <div class="sum-row"><span class="sum-key">Anchor months</span><span class="sum-val">${wz.months.join(' · ')}</span></div>
     ${wz.activeMonths && wz.activeMonths.length ? `<div class="sum-row"><span class="sum-key">Also fasting</span><span class="sum-val">${wz.activeMonths.join(' · ')}</span></div>` : ''}
   `;
@@ -1593,13 +1652,13 @@ function downloadJournal() {
 
   const name = document.getElementById('wz-name')?.value.trim() || wz.name || 'Friend';
   const level = wz.level || 'Standard';
-  const day = (typeof dayFull !== 'undefined' && dayFull[wz.day]) || wz.day || 'Saturday';
+  const days = (wz.days||[]).map(d=>(typeof dayFull!=='undefined'&&dayFull[d])||d); const day = days[0] || 'Saturday';
   const months = wz.months || ['January','July','December'];
 
   fetch('/api/generate-pdf', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({name, level, altar_day: day, anchor_months: months, active_months: wz.activeMonths || []})
+    body: JSON.stringify({name, level, altar_day: day, altar_days: days, day_intentions: wz.dayIntentions||{}, anchor_months: months, active_months: wz.activeMonths || []})
   })
   .then(r => { if(!r.ok) throw new Error('failed'); return r.blob(); })
   .then(blob => {
@@ -1792,6 +1851,52 @@ function setupEmailReminders() {
     status.textContent = 'Could not set up reminders right now.'
     setTimeout(() => status.textContent = '', 3000)
   })
+}
+
+
+function downloadAltarOnly() {
+  const btn = document.getElementById('btn-altar-pdf');
+  const txt = document.getElementById('btn-altar-text');
+  btn.disabled = true;
+  txt.textContent = 'Generating altar day pages...';
+
+  const name = document.getElementById('wz-name')?.value.trim() || wz.name || 'Friend';
+  const days = (wz.days||[]).map(d=>(typeof dayFull!=='undefined'&&dayFull[d])||d);
+  const months = wz.months || ['January','July','December'];
+
+  fetch('/api/generate-pdf', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      name,
+      altar_days: days,
+      day_intentions: wz.dayIntentions || {},
+      anchor_months: months,
+      active_months: wz.activeMonths || [],
+      altar_only: true
+    })
+  })
+  .then(r => {
+    if (!r.ok) throw new Error('Generation failed');
+    return r.blob();
+  })
+  .then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `KeepMeAtTheAltar_${name}_AltarDays.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    txt.textContent = 'Download altar days only (PDF)';
+    btn.disabled = false;
+  })
+  .catch(err => {
+    txt.textContent = 'Download altar days only (PDF)';
+    btn.disabled = false;
+    alert('Could not generate PDF. ' + err.message);
+  });
 }
 
 </script>
