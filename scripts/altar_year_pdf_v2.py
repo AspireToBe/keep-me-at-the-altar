@@ -1543,7 +1543,10 @@ if __name__ == "__main__":
         # Supports @/path/to/args.json to avoid shell escaping issues
         try:
             arg1 = sys.argv[1]
-            if arg1.startswith('@'):
+            if arg1 == '-':
+                # Read JSON from stdin
+                config = json.loads(sys.stdin.read())
+            elif arg1.startswith('@'):
                 with open(arg1[1:]) as _f:
                     config = json.load(_f)
             else:
