@@ -1521,12 +1521,10 @@ def build_altar_only_pdf(output_path, user_name, altar_days, anchor_months, acti
         alignment=TA_CENTER, textColor=colors.HexColor("#5A5347"))))
     story.append(PageBreak())
 
-    # Altar day pages for each selected month × each altar day × 4 weeks
-    all_selected = list(anchor_months) + [m for m in (active_months or []) if m not in anchor_months]
-    month_names = [m["name"] for m in MONTHS]
-    ordered = [m for m in month_names if m in all_selected]
-
-    for month_name in ordered:
+    # Altar day pages — all 12 months, week by week, all selected altar days
+    # Altar days happen every week of the year regardless of fasting months
+    for month_data in MONTHS:
+        month_name = month_data["name"]
         for week in range(1, 5):
             for ad in altar_days:
                 story.append(PageBreak())
